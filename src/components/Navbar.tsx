@@ -25,7 +25,8 @@ const Navbar: React.FC = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <VoteIcon className="h-8 w-8 text-blue-600" />
-              <span className="ml-2 text-xl font-bold text-gray-900">E-Voting</span>
+              <span className="ml-2 mr-3 text-xl font-bold text-gray-900">E-Voting</span>
+              <span className="ml-2 text-xl font-bold text-gray-900">It may take few seconds to work</span>
             </Link>
           </div>
 
