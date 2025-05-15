@@ -38,7 +38,7 @@ const Footer: React.FC = () => {
               <Github className="h-5 w-5" />
             </a>
             <a 
-              href="mailto:contact@e-voting.com" 
+              href="" 
               className="text-gray-600 hover:text-blue-600 transition-colors"
               aria-label="Email"
             >
@@ -48,7 +48,7 @@ const Footer: React.FC = () => {
         </div>
         
         <div className="mt-8 text-center text-sm text-gray-500">
-          <p>&copy; {currentYear} E-Voting. All rights reserved.</p>
+          <p>&copy; {currentYear} VoteNow. All rights reserved.</p>
         </div>
       </div>
     </footer>
