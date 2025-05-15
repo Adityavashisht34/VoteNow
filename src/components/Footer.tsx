@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center mb-4 md:mb-0">
             <VoteIcon className="h-6 w-6 text-blue-600" />
-            <span className="ml-2 text-lg font-semibold text-gray-900">E-Voting</span>
+            <span className="ml-2 text-lg font-semibold text-gray-900">VoteNow</span>
           </div>
           
           <div className="flex space-x-6 mb-4 md:mb-0">
