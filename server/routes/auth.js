@@ -2,17 +2,24 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import { authenticateToken } from '../middleware/auth.js';
+import { sendVerificationEmail } from '../utils/emailService.js';
+import rollNumbersData from '../data/rollNumbers.json' assert { type: "json" };
 
 const router = express.Router();
 
 // Register a new user
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password, role } = req.body;
+    const { username, email, password, role, rollNumber } = req.body;
+    
+    // Check if roll number is valid
+    if (!rollNumbersData.validRollNumbers.includes(rollNumber)) {
+      return res.status(400).json({ message: 'Invalid roll number' });
+    }
     
     // Check if user already exists
     const userExists = await User.findOne({ 
-      $or: [{ email }, { username }] 
+      $or: [{ email }, { username }, { rollNumber }] 
     });
     
     if (userExists) {
@@ -24,10 +31,14 @@ router.post('/register', async (req, res) => {
       username,
       email,
       password,
-      role: role || 'voter' // Default to voter if not specified
+      rollNumber,
+      role: role || 'voter'
     });
     
     await user.save();
+    
+    // Send verification email
+    await sendVerificationEmail(email, username);
     
     // Generate JWT token
     const token = jwt.sign(

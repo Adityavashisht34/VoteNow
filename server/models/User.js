@@ -21,6 +21,12 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6
   },
+  rollNumber: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true
+  },
   role: {
     type: String,
     enum: ['admin', 'voter'],
