@@ -1,9 +1,9 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import RollNumber from '../models/RollNumber.js';
 import { authenticateToken } from '../middleware/auth.js';
 import { sendVerificationEmail } from '../utils/emailService.js';
-import rollNumbersData from '../data/rollNumbers.json' assert { type: "json" };
 
 const router = express.Router();
 
@@ -12,8 +12,9 @@ router.post('/register', async (req, res) => {
   try {
     const { username, email, password, role, rollNumber } = req.body;
     
-    // Check if roll number is valid
-    if (!rollNumbersData.validRollNumbers.includes(rollNumber)) {
+    // Check if roll number exists in database
+    const validRollNumber = await RollNumber.findOne({ rollNumber });
+    if (!validRollNumber) {
       return res.status(400).json({ message: 'Invalid roll number' });
     }
     
