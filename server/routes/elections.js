@@ -1,7 +1,9 @@
 import express from 'express';
 import Election from '../models/Election.js';
 import Vote from '../models/Vote.js';
+import User from '../models/User.js';
 import { authenticateToken, isAdmin } from '../middleware/auth.js';
+import { sendElectionNotification } from '../utils/emailService.js';
 
 const router = express.Router();
 
@@ -73,6 +75,15 @@ router.post('/', authenticateToken, isAdmin, async (req, res) => {
     });
     
     await election.save();
+
+    // Send notification to all voters
+    const voters = await User.find({ role: 'voter' });
+    await Promise.all(
+      voters.map(voter => 
+        sendElectionNotification(voter.email, title, startDate)
+      )
+    );
+
     res.status(201).json({ message: 'Election created successfully', election });
   } catch (error) {
     res.status(500).json({ message: 'Error creating election', error: error.message });

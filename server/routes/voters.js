@@ -2,6 +2,7 @@ import express from 'express';
 import Election from '../models/Election.js';
 import Vote from '../models/Vote.js';
 import { authenticateToken } from '../middleware/auth.js';
+import { sendVoteConfirmation } from '../utils/emailService.js';
 
 const router = express.Router();
 
@@ -55,6 +56,10 @@ router.post('/vote', authenticateToken, async (req, res) => {
     });
     
     await vote.save();
+
+    // Send vote confirmation email
+    await sendVoteConfirmation(req.user.email, election.title);
+    
     res.status(201).json({ message: 'Vote cast successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Error casting vote', error: error.message });
