@@ -12,7 +12,7 @@ const router = express.Router();
 router.post('/register', async (req, res) => {
   try {
     const { username, email, password, role, rollNumber } = req.body;
-
+    console.log(req.body)
     // First, validate roll number against the allowed list
     const validRollNumber = await RollNumber.findOne({ rollNumber });
     if (!validRollNumber) {
@@ -41,10 +41,11 @@ router.post('/register', async (req, res) => {
       verificationCode
     });
     
-    await user.save();
     
     // Send verification email
-    await sendVerificationEmail(email, username, verificationCode);
+    sendVerificationEmail(email, username, verificationCode);
+    user.save();
+    console.log("user created")
     
     // Generate JWT token
     const token = jwt.sign(

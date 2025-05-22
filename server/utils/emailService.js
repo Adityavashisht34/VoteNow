@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-export const sendVerificationEmail = async (to, username, verificationCode) => {
+export const sendVerificationEmail =  (to, username, verificationCode) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to,
@@ -26,7 +26,7 @@ export const sendVerificationEmail = async (to, username, verificationCode) => {
     `
   };
 
-  await transporter.sendMail(mailOptions);
+   transporter.sendMail(mailOptions);
 };
 
 export const sendElectionNotification = async (to, electionTitle, startDate) => {
