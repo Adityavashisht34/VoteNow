@@ -46,7 +46,7 @@ router.post('/register', async (req, res) => {
     
     
     // Send verification email
-    sendVerificationEmail(email, username);
+    // sendVerificationEmail(email, username);
     user.save();
     console.log("User saved")
     
