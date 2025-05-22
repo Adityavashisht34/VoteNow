@@ -5,7 +5,6 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true,
     trim: true,
     minlength: 3
   },
@@ -21,15 +20,29 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6
   },
+  rollNumber: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true
+  },
   role: {
     type: String,
     enum: ['admin', 'voter'],
     default: 'voter'
   },
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  verificationToken: String,
+  verificationTokenExpires: Date,
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
 });
 
 // Hash password before saving

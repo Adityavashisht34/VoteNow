@@ -146,21 +146,6 @@ const ManageElection: React.FC = () => {
               
               {election.status === 'upcoming' && (
                 <>
-                  <Link 
-                    to={`/admin/edit-election/${election._id}`}
-                    className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 flex items-center"
-                  >
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit
-                  </Link>
-                  
-                  <button
-                    onClick={() => setShowDeleteModal(true)}
-                    className="px-4 py-2 bg-red-100 text-red-700 rounded-md hover:bg-red-200 flex items-center"
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete
-                  </button>
                 </>
               )}
             </div>
