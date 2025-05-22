@@ -2,7 +2,6 @@ import express from 'express';
 import Election from '../models/Election.js';
 import Vote from '../models/Vote.js';
 import { authenticateToken } from '../middleware/auth.js';
-import { sendVoteConfirmation } from '../utils/emailService.js';
 
 const router = express.Router();
 https://vote-now-lilac.vercel.app/

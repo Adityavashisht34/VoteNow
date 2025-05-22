@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import RollNumber from '../models/RollNumber.js';
 import { authenticateToken } from '../middleware/auth.js';
-import { sendVerificationEmail } from '../utils/emailService.js';
 import crypto from 'crypto';
 
 const router = express.Router();
@@ -21,7 +20,7 @@ router.post('/register', async (req, res) => {
 
     // Then check if user already exists
     const userExists = await User.findOne({ 
-      $or: [{ email }, { username }, { rollNumber }] 
+      email
     });
     
     if (userExists) {
@@ -29,7 +28,6 @@ router.post('/register', async (req, res) => {
     }
 
     // Generate verification code
-    const verificationCode = crypto.randomInt(100000, 999999).toString();
 
     // Create new user
     const user = new User({
@@ -38,14 +36,14 @@ router.post('/register', async (req, res) => {
       password,
       rollNumber,
       role: role || 'voter',
-      verificationCode
+      isVerified: true
     });
     
     
     // Send verification email
-    sendVerificationEmail(email, username, verificationCode);
+    // sendVerificationEmail(email, username, verificationCode);
     user.save();
-    console.log("user created")
+    console.log("User saved")
     
     // Generate JWT token
     const token = jwt.sign(
@@ -63,7 +61,7 @@ router.post('/register', async (req, res) => {
         email: user.email,
         role: user.role,
         rollNumber: user.rollNumber,
-        isVerified: user.isVerified
+        isVerified: true
       }
     });
   } catch (error) {
@@ -72,57 +70,6 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Verify email
-router.post('/verify-email', async (req, res) => {
-  try {
-    const { email, code } = req.body;
-    
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    
-    if (user.verificationCode !== code) {
-      return res.status(400).json({ message: 'Invalid verification code' });
-    }
-    
-    user.isVerified = true;
-    user.verificationCode = '';
-    await user.save();
-    
-    res.json({ message: 'Email verified successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Verification failed', error: error.message });
-  }
-});
-
-// Resend verification code
-router.post('/resend-verification', async (req, res) => {
-  try {
-    const { email } = req.body;
-    
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    
-    if (user.isVerified) {
-      return res.status(400).json({ message: 'Email is already verified' });
-    }
-    
-    // Generate new verification code
-    const verificationCode = crypto.randomInt(100000, 999999).toString();
-    user.verificationCode = verificationCode;
-    await user.save();
-    
-    // Send new verification email
-    await sendVerificationEmail(email, user.username, verificationCode);
-    
-    res.json({ message: 'Verification code resent successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to resend verification code', error: error.message });
-  }
-});
 
 // Login user
 router.post('/login', async (req, res) => {
@@ -177,6 +124,29 @@ router.get('/me', authenticateToken, async (req, res) => {
     res.json({ user: req.user });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching user data', error: error.message });
+  }
+});
+
+router.get('/api/auth/verify/:token', async (req, res) => {
+  try {
+    const user = await User.findOne({
+      verificationToken: req.params.token,
+      verificationTokenExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: 'Invalid or expired verification token' });
+    }
+
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpires = undefined;
+    await user.save();
+
+    res.redirect();
+  } catch (error) {
+    console.error('Verification error:', error);
+    res.status(400).json({ error: error.message });
   }
 });
 
