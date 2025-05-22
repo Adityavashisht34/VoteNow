@@ -3,8 +3,7 @@ import toast from 'react-hot-toast';
 
 // Create axios instance
 const api = axios.create({
-  // baseURL: 'https://votenow-iszg.onrender.com/api',
-  baseURL:'http://localhost:4000/api' ,
+  baseURL: 'https://votenow-iszg.onrender.com/api',
   headers: {
     'Content-Type': 'application/json'
   }
