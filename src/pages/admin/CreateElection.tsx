@@ -98,7 +98,9 @@ const CreateElection: React.FC = () => {
         startDate: new Date(startDate),
         endDate: new Date(endDate),
         candidates
-      });
+      }
+      
+    );
       
       toast.success('Election created successfully');
       navigate(`/admin/election/${response.data.election._id}`);

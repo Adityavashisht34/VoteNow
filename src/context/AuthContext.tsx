@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import api from '../services/api';
+import toast from 'react-hot-toast';
 
 interface User {
   id: string;
@@ -87,9 +88,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, [token]);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string,rollNumber:string,password: string, ) => {
     try {
-      const response = await api.post('/auth/login', { email, password });
+      const response = await api.post('/auth/login', { email,rollNumber, password });
       const { token, user } = response.data;
       
       setToken(token);
@@ -100,16 +101,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const register = async (username: string, email: string, password: string, role?: string) => {
+  const register = async (username: string, email: string, password: string, role: string, rollNumber: string) => {
     try {
       const response = await api.post('/auth/register', { 
         username, 
         email, 
         password,
-        role
+        role,
+        rollNumber
       });
       
       const { token, user } = response.data;
+      toast.success("Registration Successful")
       
       setToken(token);
       setUser(user);

@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rollNumber, setRollNumber] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -18,15 +19,15 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !password) {
-      toast.error('Please enter both email and password');
+    if (!password ) {
+      toast.error('Please enter everything');
       return;
     }
     
     setLoading(true);
     
     try {
-      await login(email, password);
+      await login(email,rollNumber, password);
       toast.success('Login successful');
       navigate(from, { replace: true });
     } catch (error: any) {
@@ -56,10 +57,22 @@ const Login: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="your@email.com"
-              required
+              
             />
           </div>
-          
+          <div>
+            <label htmlFor="rollNumber" className="block text-sm font-medium text-gray-700 mb-1">
+              Roll Number
+            </label>
+            <input
+              id="rollNumber"
+              type="number"
+              value={rollNumber}
+              onChange={(e) => setRollNumber(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              placeholder="1234567890"
+            />
+          </div>
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
               Password

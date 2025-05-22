@@ -11,13 +11,19 @@ const router = express.Router();
 router.post('/register', async (req, res) => {
   try {
     const { username, email, password, role, rollNumber } = req.body;
-    
-    // Check if roll number exists in database
     const validRollNumber = await RollNumber.findOne({ rollNumber });
-    if (!validRollNumber) {
-      return res.status(400).json({ message: 'Invalid roll number' });
+    if (validRollNumber) {
+      console.log(validRollNumber)
+      const user = new User({
+        username,
+        email,
+        password,
+        rollNumber,
+        role: role || 'voter'
+      });
+      
+      await user.save();
     }
-    
     // Check if user already exists
     const userExists = await User.findOne({ 
       $or: [{ email }, { username }, { rollNumber }] 
@@ -26,17 +32,6 @@ router.post('/register', async (req, res) => {
     if (userExists) {
       return res.status(400).json({ message: 'User already exists' });
     }
-    
-    // Create new user
-    const user = new User({
-      username,
-      email,
-      password,
-      rollNumber,
-      role: role || 'voter'
-    });
-    
-    await user.save();
     
     // Send verification email
     await sendVerificationEmail(email, username);
@@ -55,21 +50,23 @@ router.post('/register', async (req, res) => {
         id: user._id,
         username: user.username,
         email: user.email,
-        role: user.role
+        role: user.role,
+        rollNumber: user.rollNumber
       }
     });
-  } catch (error) {
-    res.status(500).json({ message: 'Registration failed', error: error.message });
+  }
+  catch (error) {
+    res.status(500).json({ message: 'Invalid Roll Number', error: error.message });
   }
 });
 
 // Login user
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, rollNumber, password } = req.body;
     
-    // Find user by email
     const user = await User.findOne({ email });
+    console.log(user)
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }

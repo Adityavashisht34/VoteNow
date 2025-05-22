@@ -5,12 +5,13 @@ import { authenticateToken } from '../middleware/auth.js';
 import { sendVoteConfirmation } from '../utils/emailService.js';
 
 const router = express.Router();
-
+https://vote-now-lilac.vercel.app/
 // Cast a vote
 router.post('/vote', authenticateToken, async (req, res) => {
   try {
     const { electionId, candidateId } = req.body;
     const userId = req.user.id;
+
     
     // Check if election exists and is active
     const election = await Election.findById(electionId);
@@ -57,8 +58,8 @@ router.post('/vote', authenticateToken, async (req, res) => {
     
     await vote.save();
 
-    // Send vote confirmation email
-    await sendVoteConfirmation(req.user.email, election.title);
+    // // Send vote confirmation email
+    // await sendVoteConfirmation(req.user.email, election.title);
     
     res.status(201).json({ message: 'Vote cast successfully' });
   } catch (error) {
