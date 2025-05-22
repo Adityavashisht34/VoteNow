@@ -32,6 +32,14 @@ const userSchema = new mongoose.Schema({
     enum: ['admin', 'voter'],
     default: 'voter'
   },
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+  verificationCode: {
+    type: String,
+    required: true
+  },
   createdAt: {
     type: Date,
     default: Date.now

@@ -64,7 +64,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', authenticateToken, isAdmin, async (req, res) => {
   try {
     const { title, description, startDate, endDate, candidates } = req.body;
-    console.log(req.body)
+    
     const election = new Election({
       title,
       description,
@@ -76,13 +76,13 @@ router.post('/', authenticateToken, isAdmin, async (req, res) => {
     
     await election.save();
 
-    // Send notification to all voters
-    // const voters = await User.find({ role: 'voter' });
-    // await Promise.all(
-    //   voters.map(voter => 
-    //     sendElectionNotification(voter.email, title, startDate)
-    //   )
-    // );
+    // Send notification to all verified voters
+    const voters = await User.find({ role: 'voter', isVerified: true });
+    await Promise.all(
+      voters.map(voter => 
+        sendElectionNotification(voter.email, title, startDate)
+      )
+    );
 
     res.status(201).json({ message: 'Election created successfully', election });
   } catch (error) {

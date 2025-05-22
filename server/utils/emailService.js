@@ -8,14 +8,21 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-export const sendVerificationEmail = async (to, username) => {
+export const sendVerificationEmail = async (to, username, verificationCode) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to,
-    subject: 'Welcome to VoteNow - Email Verification',
+    subject: 'VoteNow - Email Verification',
     html: `
-      <h1>Welcome to VoteNow, ${username}!</h1>
-      <p>Thank you for registering. Your account has been verified.</p>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h1 style="color: #2563eb;">Welcome to VoteNow, ${username}!</h1>
+        <p>Thank you for registering. Please verify your email address by entering the following verification code:</p>
+        <div style="background-color: #f3f4f6; padding: 20px; text-align: center; margin: 20px 0;">
+          <h2 style="color: #1f2937; font-size: 24px; margin: 0;">${verificationCode}</h2>
+        </div>
+        <p>This code will expire in 1 hour.</p>
+        <p>If you didn't create an account, please ignore this email.</p>
+      </div>
     `
   };
 
@@ -28,10 +35,16 @@ export const sendElectionNotification = async (to, electionTitle, startDate) => 
     to,
     subject: `New Election: ${electionTitle}`,
     html: `
-      <h1>New Election Announcement</h1>
-      <p>A new election "${electionTitle}" has been scheduled.</p>
-      <p>Start Date: ${new Date(startDate).toLocaleString()}</p>
-      <p>Please login to your account to participate.</p>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h1 style="color: #2563eb;">New Election Announcement</h1>
+        <p>A new election has been created:</p>
+        <div style="background-color: #f3f4f6; padding: 20px; margin: 20px 0;">
+          <h2 style="color: #1f2937; margin: 0 0 10px 0;">${electionTitle}</h2>
+          <p style="margin: 0;">Starts: ${new Date(startDate).toLocaleString()}</p>
+        </div>
+        <p>Log in to your account to participate in the election.</p>
+        <p>Thank you for being a part of our democratic process!</p>
+      </div>
     `
   };
 
@@ -44,9 +57,11 @@ export const sendVoteConfirmation = async (to, electionTitle) => {
     to,
     subject: 'Vote Confirmation',
     html: `
-      <h1>Thank You for Voting!</h1>
-      <p>Your vote for "${electionTitle}" has been successfully recorded.</p>
-      <p>Results will be available after the election ends.</p>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h1 style="color: #2563eb;">Thank You for Voting!</h1>
+        <p>Your vote for "${electionTitle}" has been successfully recorded.</p>
+        <p>Results will be available after the election ends.</p>
+      </div>
     `
   };
 
