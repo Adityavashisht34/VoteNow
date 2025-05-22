@@ -13,7 +13,13 @@ router.post('/register', async (req, res) => {
   try {
     const { username, email, password, role, rollNumber } = req.body;
 
-    // Check if user already exists
+    // First, validate roll number against the allowed list
+    const validRollNumber = await RollNumber.findOne({ rollNumber });
+    if (!validRollNumber) {
+      return res.status(400).json({ message: 'Invalid Roll Number' });
+    }
+
+    // Then check if user already exists
     const userExists = await User.findOne({ 
       $or: [{ email }, { username }, { rollNumber }] 
     });
@@ -22,15 +28,10 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Validate roll number
-    const validRollNumber = await RollNumber.findOne({ rollNumber });
-    if (!validRollNumber) {
-      return res.status(400).json({ message: 'Invalid Roll Number' });
-    }
-
     // Generate verification code
     const verificationCode = crypto.randomInt(100000, 999999).toString();
 
+    // Create new user
     const user = new User({
       username,
       email,
@@ -65,6 +66,7 @@ router.post('/register', async (req, res) => {
       }
     });
   } catch (error) {
+    console.error('Registration error:', error);
     res.status(500).json({ message: 'Registration failed', error: error.message });
   }
 });
