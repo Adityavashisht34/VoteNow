@@ -22,8 +22,13 @@ router.post('/register', async (req, res) => {
     const userExists = await User.findOne({ 
       email
     });
-    
+    const userExistsWithRollNumber = await User.findOne({ 
+      rollNumber
+    });
     if (userExists) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+    if (userExistsWithRollNumber) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
@@ -41,7 +46,7 @@ router.post('/register', async (req, res) => {
     
     
     // Send verification email
-    // sendVerificationEmail(email, username, verificationCode);
+    sendVerificationEmail(email, username);
     user.save();
     console.log("User saved")
     
