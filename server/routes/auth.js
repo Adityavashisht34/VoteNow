@@ -51,7 +51,6 @@ router.post('/register', async (req, res) => {
       console.log("aadhar saved")
     user.save();
     
-    console.log(user)
     
     // Generate JWT token
     const token = jwt.sign(
