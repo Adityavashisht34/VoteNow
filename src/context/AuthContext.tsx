@@ -88,9 +88,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, [token]);
 
-  const login = async (email: string,rollNumber:string,password: string, ) => {
+  const login = async (email: string,aadhar:string,password: string, ) => {
     try {
-      const response = await api.post('/auth/login', { email,rollNumber, password });
+      const response = await api.post('/auth/login', { email,aadhar, password });
       const { token, user } = response.data;
       
       setToken(token);
@@ -101,14 +101,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const register = async (username: string, email: string, password: string, role: string, rollNumber: string) => {
+  const register = async (username: string, email: string, password: string, role: string, aadhar: string) => {
     try {
       const response = await api.post('/auth/register', { 
         username, 
         email, 
         password,
         role,
-        rollNumber
+        aadhar
       });
       
       const { token, user } = response.data;

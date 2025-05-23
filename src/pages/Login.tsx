@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rollNumber, setRollNumber] = useState('');
+  const [aadhar, setAadhar] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const Login: React.FC = () => {
     setLoading(true);
     
     try {
-      await login(email,rollNumber, password);
+      await login(email,aadhar, password);
       toast.success('Login successful');
       navigate(from, { replace: true });
     } catch (error: any) {
@@ -61,14 +61,14 @@ const Login: React.FC = () => {
             />
           </div>
           <div>
-            <label htmlFor="rollNumber" className="block text-sm font-medium text-gray-700 mb-1">
-              Roll Number
+            <label htmlFor="aadhar" className="block text-sm font-medium text-gray-700 mb-1">
+              Aadhar Number
             </label>
             <input
-              id="rollNumber"
+              id="aadhar"
               type="number"
-              value={rollNumber}
-              onChange={(e) => setRollNumber(e.target.value)}
+              value={aadhar}
+              onChange={(e) => setAadhar(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="1234567890"
             />

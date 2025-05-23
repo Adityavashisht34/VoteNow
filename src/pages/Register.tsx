@@ -8,7 +8,7 @@ const Register: React.FC = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rollNumber, setRollNumber] = useState('');
+  const [aadhar, setAadhar] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState('voter');
   const [loading, setLoading] = useState(false);
@@ -20,7 +20,7 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!username || !email || !password || !confirmPassword || !rollNumber) {
+    if (!username || !email || !password || !confirmPassword || !aadhar) {
       toast.error('Please fill in all fields');
       return;
     }
@@ -38,7 +38,7 @@ const Register: React.FC = () => {
     setLoading(true);
     
     try {
-      await register(username, email, password, role, rollNumber);
+      await register(username, email, password, role, aadhar);
       toast.success('Registration successful!');
       navigate("/voter")
       setShowVerification(true);
@@ -74,14 +74,14 @@ const Register: React.FC = () => {
           </div>
           
           <div>
-            <label htmlFor="rollNumber" className="block text-sm font-medium text-gray-700 mb-1">
-              Roll Number
+            <label htmlFor="aadhar" className="block text-sm font-medium text-gray-700 mb-1">
+              Aadhar Number
             </label>
             <input
-              id="rollNumber"
-              type="text"
-              value={rollNumber}
-              onChange={(e) => setRollNumber(e.target.value)}
+              id="aadhar"
+              type="number"
+              value={aadhar}
+              onChange={(e) => setAadhar(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="2021AAPS0001G"
               required

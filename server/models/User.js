@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import aadhar from './Aadhar.js';
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -20,7 +21,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6
   },
-  rollNumber: {
+  aadhar: {
     type: String,
     required: true,
     unique: true,

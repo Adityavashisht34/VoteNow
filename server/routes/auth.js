@@ -1,35 +1,35 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-import RollNumber from '../models/RollNumber.js';
 import { authenticateToken } from '../middleware/auth.js';
 import crypto from 'crypto';
+import Aadhar from '../models/Aadhar.js';
 
 const router = express.Router();
 
 // Register a new user
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password, role, rollNumber } = req.body;
+    const { username, email, password, role, aadhar } = req.body;
     console.log(req.body)
     // First, validate roll number against the allowed list
-    const validRollNumber = await RollNumber.findOne({ rollNumber });
-    if (!validRollNumber) {
-      return res.status(400).json({ message: 'Invalid Roll Number' });
+    const validAadhar = await Aadhar.findOne({ aadhar });
+    if (validAadhar) {
+      return res.status(400).json({ message: 'Aadhar Linked Already' });
     }
 
     // Then check if user already exists
     const userExists = await User.findOne({ 
       email
     });
-    const userExistsWithRollNumber = await User.findOne({ 
-      rollNumber
+    const userExistsWithAadhar = await User.findOne({ 
+      aadhar
     });
     if (userExists) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: 'Email already registered with us' });
     }
-    if (userExistsWithRollNumber) {
-      return res.status(400).json({ message: 'User already exists' });
+    if (userExistsWithAadhar) {
+      return res.status(400).json({ message: 'Aadhar linked to a user' });
     }
 
     // Generate verification code
@@ -39,16 +39,19 @@ router.post('/register', async (req, res) => {
       username,
       email,
       password,
-      rollNumber,
+      aadhar,
       role: role || 'voter',
       isVerified: true
     });
     
-    
-    // Send verification email
-    // sendVerificationEmail(email, username);
+    const aadhar1 = new Aadhar({
+      aadhar
+      })
+      await aadhar1.save();
+      console.log("aadhar saved")
     user.save();
-    console.log("User saved")
+    
+    console.log(user)
     
     // Generate JWT token
     const token = jwt.sign(
@@ -65,7 +68,7 @@ router.post('/register', async (req, res) => {
         username: user.username,
         email: user.email,
         role: user.role,
-        rollNumber: user.rollNumber,
+        aadhar: user.aadhar,
         isVerified: true
       }
     });
@@ -79,9 +82,9 @@ router.post('/register', async (req, res) => {
 // Login user
 router.post('/login', async (req, res) => {
   try {
-    const { email, rollNumber, password } = req.body;
+    const { email, aadhar, password } = req.body;
     
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email,aadhar });
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
