@@ -1,3 +1,4 @@
+import { timeStamp } from 'console';
 import mongoose from 'mongoose';
 
 const aadharSchema = new mongoose.Schema({
@@ -10,9 +11,8 @@ const aadharSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now,
-    immutable: true 
-  }
+    default: Date.now
+  },
 });
 
 const Aadhar = mongoose.model('Aadhar', aadharSchema);

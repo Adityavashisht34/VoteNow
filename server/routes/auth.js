@@ -11,7 +11,6 @@ const router = express.Router();
 router.post('/register', async (req, res) => {
   try {
     const { username, email, password, role, aadhar } = req.body;
-    console.log(req.body)
     // First, validate roll number against the allowed list
     const validAadhar = await Aadhar.findOne({ aadhar });
     if (validAadhar) {
@@ -43,12 +42,12 @@ router.post('/register', async (req, res) => {
       role: role || 'voter',
       isVerified: true
     });
+
     
     const aadhar1 = new Aadhar({
       aadhar
       })
-      await aadhar1.save();
-      console.log("aadhar saved")
+      aadhar1.save();
     user.save();
     
     

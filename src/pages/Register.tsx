@@ -83,7 +83,7 @@ const Register: React.FC = () => {
               value={aadhar}
               onChange={(e) => setAadhar(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              placeholder="2021AAPS0001G"
+              placeholder="12 Digit Number"
               required
             />
           </div>
